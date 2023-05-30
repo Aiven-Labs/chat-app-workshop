@@ -1,0 +1,85 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.quarkus.io/build-timestamp: 2023-05-29 - 13:23:37 +0000
+  labels:
+    app.kubernetes.io/name: chat-app
+    app.kubernetes.io/version: 1.0.0-SNAPSHOT
+    app.kubernetes.io/managed-by: quarkus
+  name: chat-app
+spec:
+  ports:
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8443
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: chat-app
+    app.kubernetes.io/version: 1.0.0-SNAPSHOT
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.quarkus.io/build-timestamp: 2023-05-29 - 13:23:37 +0000
+  labels:
+    app.kubernetes.io/name: chat-app
+    app.kubernetes.io/version: 1.0.0-SNAPSHOT
+    app.kubernetes.io/managed-by: quarkus
+  name: chat-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: chat-app
+      app.kubernetes.io/version: 1.0.0-SNAPSHOT
+  template:
+    metadata:
+      annotations:
+        app.quarkus.io/build-timestamp: 2023-05-29 - 13:23:37 +0000
+      labels:
+        app.kubernetes.io/name: chat-app
+        app.kubernetes.io/version: 1.0.0-SNAPSHOT
+        app.kubernetes.io/managed-by: quarkus
+    spec:
+      containers:
+        - env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+            - secretRef:
+                name: chat-app-secret
+          image: sebi2706/chat-app:latest
+          imagePullPolicy: Always
+          name: chat-app
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 8443
+              name: https
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/certs
+              name: certs-volume
+              readOnly: false
+      volumes:
+        - name: certs-volume
+          secret:
+            defaultMode: 384
+            items:
+              - key: keystore
+                path: client.keystore.p12
+              - key: trustore
+                path: client.truststore.jks
+            optional: false
+            secretName: certs-secrets

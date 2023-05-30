@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app.quarkus.io/build-timestamp: 2023-05-30 - 10:33:28 +0000
+  labels:
+    app.kubernetes.io/version: 1.0.0-SNAPSHOT
+    app.kubernetes.io/name: chatgpt-sebi
+    app.kubernetes.io/managed-by: quarkus
+  name: chatgpt-sebi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/version: 1.0.0-SNAPSHOT
+      app.kubernetes.io/name: chatgpt-sebi
+  template:
+    metadata:
+      annotations:
+        app.quarkus.io/build-timestamp: 2023-05-30 - 10:33:28 +0000
+      labels:
+        app.kubernetes.io/version: 1.0.0-SNAPSHOT
+        app.kubernetes.io/name: chatgpt-sebi
+        app.kubernetes.io/managed-by: quarkus
+    spec:
+      containers:
+        - env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+            - secretRef:
+                name: chat-app-secret
+          image: sebi2706/chatgpt-seb:latest
+          imagePullPolicy: Always
+          name: chatgpt-sebi
+          volumeMounts:
+            - mountPath: /etc/certs
+              name: certs-volume
+              readOnly: false
+      volumes:
+        - name: certs-volume
+          secret:
+            defaultMode: 384
+            items:
+              - key: keystore
+                path: client.keystore.p12
+              - key: trustore
+                path: client.truststore.jks
+            optional: false
+            secretName: certs-secrets
