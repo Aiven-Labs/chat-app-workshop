@@ -1,8 +1,14 @@
+![](archi3.png)
+
+# Introduction
+
+In this workshop you will be deploying a modern chat platform, with efficient caching, event driven architecture that can trigger special workloads, all backed by Kafka.
+
 # Pre-requisites 
 
 ## Aiven Account 
 
-First of all you will need an Aiven account, you can create one for free with no credit card asked. You will have a free plan for MySQL, PostreSQL and Redis. You will alos have 300$ of free credit. 
+First of all you will need an Aiven account, you can create one for free with no credit card asked. You will have a free plan for MySQL, PostreSQL and Redis. You will also have 300$ of free credit. 
 This will be enough for you to run this workshop, get your account [here](https://console.aiven.io/signup).
 
 ## Aiven CLI (avn)

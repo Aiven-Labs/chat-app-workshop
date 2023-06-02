@@ -4,6 +4,7 @@ kind: Service
 metadata:
   annotations:
     app.quarkus.io/build-timestamp: 2023-05-29 - 13:23:37 +0000
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: '1800'
   labels:
     app.kubernetes.io/name: chat-app
     app.kubernetes.io/version: 1.0.0-SNAPSHOT

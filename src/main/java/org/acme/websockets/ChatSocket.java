@@ -13,6 +13,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
+import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.jboss.logging.Logger;
 
@@ -83,6 +84,7 @@ public class ChatSocket {
     }
 
     @Incoming("special_command_out")
+    @Acknowledgment(Acknowledgment.Strategy.NONE)
     public Uni<Void> sendSpecialRequestResponse(org.eclipse.microprofile.reactive.messaging.Message<SpecialRequest> request){
         RedisChatSession chatSession = sessions.get(request.getPayload().getUsername());
         chatSession.getSession().getAsyncRemote().sendObject(">> ChatGPT : " + ": " + request.getPayload().getContent());
