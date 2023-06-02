@@ -13,7 +13,7 @@ This will be enough for you to run this workshop, get your account [here](https:
 
 ## Aiven CLI (avn)
 
-Ones you got your account, make sure to install the Aiven CLI tool, you will need it, you can it [here](https://github.com/aiven/aiven-client).
+Once you got your account, make sure to install the Aiven CLI tool, you will need it, you can get it [here](https://github.com/aiven/aiven-client).
 
 ## Options for deploying the workloads
 
@@ -202,11 +202,15 @@ WHERE after['content']  LIKE '%/chatgpt%'
 
 You can now create a deployment for your Flink Application. 
 
-# Deploy workload for the special commands 
+# Option 1 : Deploy workload for handling directly the special commands 
 
 For now, only available through Kubernetes, simply type : `kubectl apply -f chatgpt-seb.yml`
 
 Go back to your chat app and type a message starting with "\chatgpt" , i.e "\chatgpt What is Apache Flink ?" wait for a few seconds and you should get the reply from the openAI service. 
+
+# Option 2 : Leverage Knative Kafka Source to have a Serverless Event Driven approach
+
+//todo
 
 # Create your own Flink Applications
 
