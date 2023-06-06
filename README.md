@@ -23,6 +23,10 @@ You will need at least to deploy one workload for this workshop. For the first w
 * Deploy on Docker, you will need to have Docker or Podman on your computer.
 * Build and deploy from sources, you will need to have a JDK and Maven installed on your computer.
 
+# Before you start
+
+Once you have all the pre-requirements the next important thing is to clone this repo. All the commands that will follow expect you to be at the root of your cloned repository.
+
 # Create Aiven services
 
 ## Postgres 
@@ -206,11 +210,33 @@ You can now create a deployment for your Flink Application.
 
 For now, only available through Kubernetes, simply type : `kubectl apply -f chatgpt-seb.yml`
 
-Go back to your chat app and type a message starting with "\chatgpt" , i.e "\chatgpt What is Apache Flink ?" wait for a few seconds and you should get the reply from the openAI service. 
+Go back to your chat app and type a message starting with "/chatgpt" , i.e "/chatgpt What is Apache Flink ?" wait for a few seconds and you should get the reply from the openAI service. 
 
 # Option 2 : Leverage Knative Kafka Source to have a Serverless Event Driven approach
 
-//todo
+First, deploy the the Knative service : 
+
+```
+kubectl apply -f manifests/chatgpt-knative-sink.yml
+```
+
+Then create 2 new secrets for the Kafka Source : 
+
+
+```
+kubectl create secret generic cacert --from-file=ca.pem
+```
+
+```
+kubectl create secret tls kafka-secret --cert=service.cert --key=service.key
+```
+
+And finally deploy the Knative Kafka Source : 
+
+```
+kubectl apply -f manifests/kafka-source.yml
+```
+
 
 # Create your own Flink Applications
 

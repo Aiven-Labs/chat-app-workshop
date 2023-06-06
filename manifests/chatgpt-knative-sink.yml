@@ -1,0 +1,40 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    app.quarkus.io/build-timestamp: 2023-05-30 - 16:54:11 +0000
+    app.quarkus.io/commit-id: c27d303a7562934d42a0fc2496406f184d0fb997
+  labels:
+    app.kubernetes.io/name: chatgpt-sink
+    app.kubernetes.io/version: 1.0.0-SNAPSHOT
+  name: chatgpt-sink
+spec:
+  template:
+    spec:
+      containers:
+        - envFrom:
+            - secretRef:
+                name: chat-app-secret
+          image: sebi2706/chatgpt-sink:1.2
+          imagePullPolicy: Always
+          name: chatgpt-sink
+          ports:
+            - containerPort: 8080
+              name: http1
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/run/secrets
+              name: certs-volume
+              readOnly: false
+      volumes:
+        - name: certs-volume
+          secret:
+            defaultMode: 384
+            items:
+              - key: keystore
+                path: client.keystore.p12
+              - key: trustore
+                path: client.truststore.jks
+            optional: false
+            secretName: certs-secrets

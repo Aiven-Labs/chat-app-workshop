@@ -1,0 +1,44 @@
+apiVersion: sources.knative.dev/v1beta1
+kind: KafkaSource
+metadata:
+  name: kafka-source
+  finalizers:
+    - kafkasources.sources.knative.dev
+  labels:
+    app: kafka-source
+    app.kubernetes.io/component: kafka-source
+    app.kubernetes.io/instance: kafka-source
+    app.kubernetes.io/name: kafka-source
+spec:
+  bootstrapServers:
+    - '<replace with your kafka service>'
+  consumerGroup: knative-group
+  consumers: 1
+  initialOffset: latest
+  net:
+    sasl:
+      password: {}
+      type: {}
+      user: {}
+    tls:
+      caCert:
+        secretKeyRef:
+          key: ca.pem
+          name: cacert
+      cert:
+        secretKeyRef:
+          key: tls.crt
+          name: kafka-secret
+      enable: true
+      key:
+        secretKeyRef:
+          key: tls.key
+          name: kafka-secret
+  sink:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: chatgpt-sink
+  topics:
+    - special_command
+  sinkUri: '<replace with your chagpt-sink service uri>'
